@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-up" width="24" height="14" tilewidth="20" tileheight="20" nextobjectid="15">
+ <tileset firstgid="1" name="Foreground" tilewidth="20" tileheight="20">
+  <image source="ForegroundTiles.png" width="520" height="640"/>
+ </tileset>
+ <tileset firstgid="833" name="Background" tilewidth="20" tileheight="20">
+  <image source="BackgroundTiles.png" width="520" height="640"/>
+ </tileset>
+ <tileset firstgid="1665" name="Objects" tilewidth="20" tileheight="20">
+  <image source="Objects.png" width="200" height="200"/>
+ </tileset>
+ <layer name="Background" width="24" height="14">
+  <data encoding="base64" compression="zlib">
+   eJylVFsKwjAQLNQbqCfSe0grNEeo1/B5iSoIClXr60sr4h3Ua6jgBiZ0qamJdWAITXYn2d2hwnUcYaAOtrFyb0eMwAnWDdZq5TMnoP0T9NbEvZvp5O8Q0JkTz8g7gnWNNkeHYg7ElLj6Un9MrBm0TGijDlVDwvQfBT3+BSFqT/HeMdPX9fgfeJhfkTcUGnTeIw6IQ2KfeLeo1WMzz6NJeyPoyjq3ln7laMEzulgfZ1PmWQF/LS194CFWvefK7lFzukA7djMPvyx94ON9Jv9If8+Y/tOgL3vbJS5y/pTft4LckPUnMsy3zH9GIoB2YlFDWfziH443A2RUlg==
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1">
+  <object id="1" gid="1696" x="162.903" y="80.9978"/>
+  <object id="3" gid="1697" x="217.963" y="141.224"/>
+  <object id="8" gid="1698" x="427.768" y="221.178"/>
+ </objectgroup>
+ <layer name="Foreground" width="24" height="14">
+  <data encoding="base64" compression="zlib">
+   eJzLZWBgWAHEy4F4ARCvBOKlULwMKnaFARWEAfFaIF4MlQfRi6B6c4G4AAkrMjKQDPbikQtGM1+bDPP34JFrBeI1DJDwAPlFg0Tz3zJghhcuEMlAOHzYyfAfDAQBsQ4F+gmBcBqbHw3EKkSYbwHE1kB1dkBsD8SOQGzLCBED4VAcZoDSsTIR5u8nwc3o5mthMb8EKFaKJL6bTPNB6YeY9LmTTPMDiTSfkPstgZgLijmAmBOIWYA4G4jzoGxeIOaGYjkSzY9gQC0TCGFQnOQDcREQFzBCwhHmPl6o/flQOUuoG3GZBQAweyut
+  </data>
+ </layer>
+</map>
