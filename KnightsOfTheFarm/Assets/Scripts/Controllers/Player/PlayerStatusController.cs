@@ -66,6 +66,10 @@ public class PlayerStatusController : MonoBehaviour {
 	public bool CurrentlySlashing() {
 		return pAnimator.GetCurrentAnimatorStateInfo(0).IsTag("Slash");
 	}
+	
+	public bool CurrentlyChargingSlash() {
+		return pAnimator.GetCurrentAnimatorStateInfo(0).IsTag("ChargingSlash");
+	}
 
 	// -- UPDATE --
 	protected void Update () {

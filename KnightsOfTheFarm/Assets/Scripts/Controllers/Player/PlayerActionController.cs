@@ -6,6 +6,46 @@ public partial class PlayerActionController : MonoBehaviour, IInteractionZoneAct
 	protected Animator pAnimator;
 	protected HashSet<int> objectIdsHit;
 	protected PlayerStatusController pStatus;
+	
+	// slashing
+	protected bool isSlashKeyHeldDown;
+	protected double slashKeyHeldTime;
+	
+	public const float WEAK_SLASH_THRESHOLD = 0.1f;
+
+	public void HandleSlashPressedDown() {
+		if (pStatus.CurrentlySlashing()) {
+			return;
+		}
+
+		ResetSlash();
+		isSlashKeyHeldDown = true;
+		slashKeyHeldTime = 0.0f;
+	}
+	
+	public void HandleSlashReleased() {
+		if (!isSlashKeyHeldDown) {
+			// if the slash already triggered, don't do anything
+			return;
+		}
+		
+		isSlashKeyHeldDown = false;
+		
+		if (slashKeyHeldTime >= WEAK_SLASH_THRESHOLD) {
+			pAnimator.SetTrigger("ChargeSlashFinish");
+		} else {
+			// TODO: implement weak attack
+			// StartWeakSlash();
+		} 
+		slashKeyHeldTime = 0.0f;
+	}
+
+	protected void Update() {
+		UpdateSlashLogic();
+		
+		// in PlayerActionController+InteractionZoneActor
+		UpdateClosestInteractionZone();
+	}
 
 	protected void Awake() {
 		objectIdsHit = new HashSet<int>();
@@ -18,21 +58,18 @@ public partial class PlayerActionController : MonoBehaviour, IInteractionZoneAct
 		pAnimator = pComponentManager.pAnimator;
 	}
 
-	public void HandleSlashPressed() {
-		if (pStatus.CurrentlySlashing()) {
-			return;
-		}
-
-		ResetSlash();
-		pAnimator.SetTrigger("Slash");
-	}
-
 	protected void ResetSlash() {
 		objectIdsHit.Clear();
 	}
-
-	protected void Update() {
-		UpdateClosestInteractionZone();
+	
+	protected void UpdateSlashLogic() {
+		if (isSlashKeyHeldDown && pStatus.IsGrounded()) {
+			slashKeyHeldTime += Time.deltaTime;
+			
+			if (!pStatus.CurrentlyChargingSlash() && slashKeyHeldTime >= WEAK_SLASH_THRESHOLD) {
+				pAnimator.SetTrigger("ChargeSlashStart");
+			}
+		}
 	}
 
 	protected void HitObject(Collider2D other) {

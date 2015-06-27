@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 9336e136f3bc344888daeee794dbf665
-timeCreated: 1435082335
+timeCreated: 1435161259
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -20,6 +20,8 @@ TextureImporter:
     21300026: Objects@RightPlatformAttached
     21300028: Objects@LeftPlatformDetached
     21300030: Objects@RightPlatformDetached
+    21300032: Objects@ChestOpen
+    21300034: Objects@InteractibleIndicator
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -222,6 +224,26 @@ TextureImporter:
         y: 180
         width: 20
         height: 20
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Objects@ChestOpen
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 80
+        width: 20
+        height: 13
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Objects@InteractibleIndicator
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 80
+        width: 9
+        height: 12
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}

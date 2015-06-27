@@ -57,7 +57,6 @@ public class PlayerMovementController : MonoBehaviour {
 			jumpCharges--;
 
 			pRigidbody.velocity = new Vector2(pRigidbody.velocity.x, PLAYER_JUMP_HEIGHT * pRigidbody.gravityScale);
-			pAnimator.SetTrigger("Flap");
 		}
 	}
 
@@ -140,6 +139,10 @@ public class PlayerMovementController : MonoBehaviour {
 	}
 
 	public void FixedUpdate() {
+		if (pStatus.CurrentlyChargingSlash() || pStatus.CurrentlySlashing()) {
+			currentAxis = new Vector2(0.0f, currentAxis.y);
+		}
+		
 		float desiredXSpeed = currentAxis.x * PLAYER_SPEED;
 
 		// if the player is trying to go right and we're already > the max input speed, don't slow him down

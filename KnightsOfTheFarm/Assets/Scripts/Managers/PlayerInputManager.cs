@@ -52,7 +52,9 @@ public class PlayerInputManager : Singleton<PlayerInputManager> {
 		if (pObject) {
 			if (slashingEnabled) {
 				if (Input.GetKeyDown(slashKey)) {
-					pActionController.HandleSlashPressed();
+					pActionController.HandleSlashPressedDown();
+				} else if (Input.GetKeyUp(slashKey)) {
+					pActionController.HandleSlashReleased();
 				}
 			}
 
