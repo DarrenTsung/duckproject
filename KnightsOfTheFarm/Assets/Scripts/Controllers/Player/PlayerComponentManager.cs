@@ -17,6 +17,10 @@ public class PlayerComponentManager : MonoBehaviour {
 	public SpriteRenderer pSpriteRenderer;
 	[HideInInspector]
 	public Animator pAnimator;
+	[HideInInspector]
+	public ParticleSystem pJumpEmitter;
+	[HideInInspector]
+	public ParticleSystemController pWallSlideParticleSystem, pRunParticleSystem;
 
 	protected void Awake() {
 		pRigidbody = GetComponent<Rigidbody2D>();
@@ -30,6 +34,9 @@ public class PlayerComponentManager : MonoBehaviour {
 		pRightCheck = transform.Find ("Checks/RightCheck");
 		pRightBottomCheck = transform.Find ("Checks/RightBottomCheck");
 		pLeftBottomCheck = transform.Find ("Checks/LeftBottomCheck");
+		pJumpEmitter = transform.Find ("Sprite/ParticleEmitters/DustJumpEmitter").GetComponent<ParticleSystem>();
+		pWallSlideParticleSystem = transform.Find ("Sprite/ParticleEmitters/WallSlideEmitter").GetComponent<ParticleSystemController>();
+		pRunParticleSystem = transform.Find ("Sprite/ParticleEmitters/DustRunEmitter").GetComponent<ParticleSystemController>();
 	}
 
 	protected void Start() {

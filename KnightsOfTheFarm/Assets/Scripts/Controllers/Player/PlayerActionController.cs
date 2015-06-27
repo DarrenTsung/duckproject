@@ -11,7 +11,7 @@ public partial class PlayerActionController : MonoBehaviour, IInteractionZoneAct
 	protected bool isSlashKeyHeldDown;
 	protected double slashKeyHeldTime;
 	
-	public const float WEAK_SLASH_THRESHOLD = 0.1f;
+	public const float WEAK_SLASH_THRESHOLD = 0.15f;
 
 	public void HandleSlashPressedDown() {
 		if (pStatus.CurrentlySlashing()) {

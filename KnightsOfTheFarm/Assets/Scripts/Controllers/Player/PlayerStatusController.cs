@@ -6,6 +6,7 @@ public class PlayerStatusController : MonoBehaviour {
 	protected Animator pAnimator;
 
 	protected GameObject pSpriteObjects;
+	protected ParticleSystemController pRunParticleSystem, pWallSlideParticleSystem;
 	protected GameObject pColliders;
 
 	protected Transform pGroundCheck, pLeftCheck, pRightCheck, pRightBottomCheck, pLeftBottomCheck;
@@ -29,6 +30,8 @@ public class PlayerStatusController : MonoBehaviour {
 		pAnimator = pComponentManager.pAnimator;
 		pSpriteObjects = pComponentManager.pSpriteObjects;
 		pColliders = pComponentManager.pColliders;
+		pRunParticleSystem = pComponentManager.pRunParticleSystem;
+		pWallSlideParticleSystem = pComponentManager.pWallSlideParticleSystem;
 	}
 
 	public bool IsGrounded() {
@@ -94,12 +97,19 @@ public class PlayerStatusController : MonoBehaviour {
 		grounded = groundedHit != 0 ? true : false;
 
 		int leftTouchingHit = Physics2D.OverlapCircleNonAlloc(pLeftCheck.position, 0.1f, emptyArray, GameLayers.TILE_COLLIDER_LAYER);
-		int leftBottomTouchingHit = Physics2D.OverlapCircleNonAlloc(pLeftBottomCheck.position, 0.1f, emptyArray, GameLayers.TILE_COLLIDER_LAYER);
+		int leftBottomTouchingHit = Physics2D.OverlapCircleNonAlloc(pLeftBottomCheck.position, 0.05f, emptyArray, GameLayers.TILE_COLLIDER_LAYER);
 		leftTouching = ((leftBottomTouchingHit + leftTouchingHit) != 0) ? true : false;
 
 		int rightTouchingHit = Physics2D.OverlapCircleNonAlloc(pRightCheck.position, 0.1f, emptyArray, GameLayers.TILE_COLLIDER_LAYER);
-		int rightBottomTouchingHit = Physics2D.OverlapCircleNonAlloc(pRightBottomCheck.position, 0.1f, emptyArray, GameLayers.TILE_COLLIDER_LAYER);
+		int rightBottomTouchingHit = Physics2D.OverlapCircleNonAlloc(pRightBottomCheck.position, 0.05f, emptyArray, GameLayers.TILE_COLLIDER_LAYER);
 		rightTouching = ((rightBottomTouchingHit + rightTouchingHit) != 0) ? true : false;
+		
+		if (leftTouching && !previouslyLeftTouching) {
+			pWallSlideParticleSystem.SetHorizontalDirection(HorizontalDirection.Left);
+		}
+		if (rightTouching && !previouslyRightTouching) {
+			pWallSlideParticleSystem.SetHorizontalDirection(HorizontalDirection.Right);
+		}
 
 		pAnimator.SetBool("Grounded", grounded);
 		pAnimator.SetBool("TouchingWall", rightTouching || leftTouching);
@@ -110,12 +120,17 @@ public class PlayerStatusController : MonoBehaviour {
 			return;
 		}
 
-		if (MovingLeft() || leftTouching) {
+		if ((MovingLeft() || leftTouching) && !rightTouching) {
 			pSpriteObjects.transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
 			pColliders.transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
-		} else if (MovingRight() || rightTouching) {
+			pRunParticleSystem.SetHorizontalDirection(HorizontalDirection.Left);
+		} else if ((MovingRight() || rightTouching) && !leftTouching) {
 			pSpriteObjects.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 			pColliders.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+			pRunParticleSystem.SetHorizontalDirection(HorizontalDirection.Right);
+		} else {
+			// right touching and left touching?
 		}
+		
 	}
 }

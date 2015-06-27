@@ -23,12 +23,15 @@ public class PlayerMovementController : MonoBehaviour {
 	protected int jumpCharges, baseJumpCharges = 2;
 	protected int teleportCharges, maxTeleportCharges = 1;
 	protected Timer teleportChargeTimer;
+	
+	protected ParticleSystem pJumpEmitter;
 
 	public void Start() {
 		PlayerComponentManager pComponentManager = GetComponent<PlayerComponentManager>();
 		pRigidbody = pComponentManager.pRigidbody;
 		pAnimator = pComponentManager.pAnimator;
 		pHitboxRadius = pComponentManager.pCircleCollider.radius;
+		pJumpEmitter = pComponentManager.pJumpEmitter;
 
 		pStatus = GetComponent<PlayerStatusController>();
 
@@ -57,6 +60,10 @@ public class PlayerMovementController : MonoBehaviour {
 			jumpCharges--;
 
 			pRigidbody.velocity = new Vector2(pRigidbody.velocity.x, PLAYER_JUMP_HEIGHT * pRigidbody.gravityScale);
+			
+			if (pStatus.IsGrounded()) {
+				pJumpEmitter.Emit(1);
+			}
 		}
 	}
 
