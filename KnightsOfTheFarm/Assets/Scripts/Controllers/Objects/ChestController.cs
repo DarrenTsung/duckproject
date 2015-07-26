@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using DT.LootSystem;
 
 public class ChestController : MonoBehaviour, IInteractionZoneDelegate {
 	protected Animator _animator;

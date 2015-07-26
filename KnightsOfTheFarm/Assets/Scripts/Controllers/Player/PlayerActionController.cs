@@ -34,8 +34,7 @@ public partial class PlayerActionController : MonoBehaviour, IInteractionZoneAct
 		if (slashKeyHeldTime >= WEAK_SLASH_THRESHOLD) {
 			pAnimator.SetTrigger("ChargeSlashFinish");
 		} else {
-			// TODO: implement weak attack
-			// StartWeakSlash();
+			pAnimator.SetTrigger("WeakSlash");
 		} 
 		slashKeyHeldTime = 0.0f;
 	}

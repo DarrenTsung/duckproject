@@ -6,10 +6,13 @@ public class PlayerStatusController : MonoBehaviour {
 	protected Animator pAnimator;
 
 	protected GameObject pSpriteObjects;
-	protected ParticleSystemController pRunParticleSystem, pWallSlideParticleSystem;
+	protected ParticleSystemController[] pParticleSystemControllers;
 	protected GameObject pColliders;
 
-	protected Transform pGroundCheck, pLeftCheck, pRightCheck, pRightBottomCheck, pLeftBottomCheck;
+	protected Transform pGroundCheck;
+	protected Transform pRightCheck, pRightTopCheck, pRightBottomCheck;
+	protected Transform pLeftCheck, pLeftTopCheck, pLeftBottomCheck;
+	
 	protected bool previouslyGrounded, previouslyLeftTouching, previouslyRightTouching;
 	protected bool grounded, leftTouching, rightTouching;
 
@@ -23,15 +26,16 @@ public class PlayerStatusController : MonoBehaviour {
 		PlayerComponentManager pComponentManager = GetComponent<PlayerComponentManager>();
 		pGroundCheck = pComponentManager.pGroundCheck;
 		pLeftCheck = pComponentManager.pLeftCheck;
-		pRightCheck = pComponentManager.pRightCheck;
-		pRightBottomCheck = pComponentManager.pRightBottomCheck;
+		pLeftTopCheck = pComponentManager.pLeftTopCheck;
 		pLeftBottomCheck = pComponentManager.pLeftBottomCheck;
+		pRightCheck = pComponentManager.pRightCheck;
+		pRightTopCheck = pComponentManager.pRightTopCheck;
+		pRightBottomCheck = pComponentManager.pRightBottomCheck;
 		pRigidbody = pComponentManager.pRigidbody;
 		pAnimator = pComponentManager.pAnimator;
 		pSpriteObjects = pComponentManager.pSpriteObjects;
 		pColliders = pComponentManager.pColliders;
-		pRunParticleSystem = pComponentManager.pRunParticleSystem;
-		pWallSlideParticleSystem = pComponentManager.pWallSlideParticleSystem;
+		pParticleSystemControllers = pComponentManager.pParticleSystemControllers;
 	}
 
 	public bool IsGrounded() {
@@ -65,6 +69,10 @@ public class PlayerStatusController : MonoBehaviour {
 	public bool MovingRight() {
 		return pRigidbody.velocity.x > 0;
 	}
+	
+	public bool CurrentlyChargeSlashing() {
+		return pAnimator.GetCurrentAnimatorStateInfo(0).IsTag("ChargeSlash");
+	}
 
 	public bool CurrentlySlashing() {
 		return pAnimator.GetCurrentAnimatorStateInfo(0).IsTag("Slash");
@@ -97,22 +105,20 @@ public class PlayerStatusController : MonoBehaviour {
 		grounded = groundedHit != 0 ? true : false;
 
 		int leftTouchingHit = Physics2D.OverlapCircleNonAlloc(pLeftCheck.position, 0.1f, emptyArray, GameLayers.TILE_COLLIDER_LAYER);
+		int leftTopTouchingHit = Physics2D.OverlapCircleNonAlloc(pLeftTopCheck.position, 0.1f, emptyArray, GameLayers.TILE_COLLIDER_LAYER);
 		int leftBottomTouchingHit = Physics2D.OverlapCircleNonAlloc(pLeftBottomCheck.position, 0.05f, emptyArray, GameLayers.TILE_COLLIDER_LAYER);
 		leftTouching = ((leftBottomTouchingHit + leftTouchingHit) != 0) ? true : false;
 
 		int rightTouchingHit = Physics2D.OverlapCircleNonAlloc(pRightCheck.position, 0.1f, emptyArray, GameLayers.TILE_COLLIDER_LAYER);
+		int rightTopTouchingHit = Physics2D.OverlapCircleNonAlloc(pRightTopCheck.position, 0.1f, emptyArray, GameLayers.TILE_COLLIDER_LAYER);
 		int rightBottomTouchingHit = Physics2D.OverlapCircleNonAlloc(pRightBottomCheck.position, 0.05f, emptyArray, GameLayers.TILE_COLLIDER_LAYER);
 		rightTouching = ((rightBottomTouchingHit + rightTouchingHit) != 0) ? true : false;
 		
-		if (leftTouching && !previouslyLeftTouching) {
-			pWallSlideParticleSystem.SetHorizontalDirection(HorizontalDirection.Left);
-		}
-		if (rightTouching && !previouslyRightTouching) {
-			pWallSlideParticleSystem.SetHorizontalDirection(HorizontalDirection.Right);
-		}
+		bool rightAllTouching = ((rightTouchingHit != 0) && (rightTopTouchingHit != 0) && (rightBottomTouchingHit != 0));
+		bool leftAllTouching = ((leftTouchingHit != 0) && (leftTopTouchingHit != 0) && (leftBottomTouchingHit != 0));
 
 		pAnimator.SetBool("Grounded", grounded);
-		pAnimator.SetBool("TouchingWall", rightTouching || leftTouching);
+		pAnimator.SetBool("TouchingWall", rightAllTouching || leftAllTouching);
 	}
 
 	protected void TurnPlayerToCorrectDirection() {
@@ -120,16 +126,21 @@ public class PlayerStatusController : MonoBehaviour {
 			return;
 		}
 
+		HorizontalDirection d = HorizontalDirection.Left;
 		if ((MovingLeft() || leftTouching) && !rightTouching) {
 			pSpriteObjects.transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
 			pColliders.transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
-			pRunParticleSystem.SetHorizontalDirection(HorizontalDirection.Left);
+			d = HorizontalDirection.Left;
 		} else if ((MovingRight() || rightTouching) && !leftTouching) {
 			pSpriteObjects.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 			pColliders.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-			pRunParticleSystem.SetHorizontalDirection(HorizontalDirection.Right);
+			d = HorizontalDirection.Right;
 		} else {
 			// right touching and left touching?
+		}
+		
+		foreach (ParticleSystemController ps in pParticleSystemControllers) {
+			ps.SetHorizontalDirection(d);
 		}
 		
 	}

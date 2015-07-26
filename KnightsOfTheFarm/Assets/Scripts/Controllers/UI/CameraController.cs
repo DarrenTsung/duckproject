@@ -9,6 +9,8 @@ public class CameraController : MonoBehaviour {
 
 	protected Rect _currentRoomBounds;
 	protected Vector3 _currentRoomPosition;
+	
+	protected Vector3 PIXEL_SIZE;
 
 	protected void Awake () {
 		EventManager.Instance.OnPlayerRegister.AddListener((GameObject playerObject) => { SetTarget(playerObject); });
@@ -19,6 +21,8 @@ public class CameraController : MonoBehaviour {
 		RoomController roomController = GameObject.FindGameObjectWithTag("Finish").GetComponent<RoomController>();
 		_currentRoomBounds = roomController.Bounds();
 		_currentRoomPosition = roomController.Position();
+		
+		PIXEL_SIZE = Camera.main.ScreenToWorldPoint(new Vector3(1, 1, 0)) - Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0));
 	}
 
 	public void SetTarget(GameObject target) {
@@ -32,6 +36,7 @@ public class CameraController : MonoBehaviour {
 		transform.position = Vector3.Lerp(transform.position, targetPosition, speed * Time.deltaTime);
 
 		RestrictCameraInBounds(_currentRoomBounds, _currentRoomPosition);
+		SnapPositionToNearestPixel();
 	}
 
 	protected bool RestrictCameraInBounds(Rect otherBounds, Vector3 otherPosition) {
@@ -58,5 +63,12 @@ public class CameraController : MonoBehaviour {
 		}
 
 		return true;
+	}
+	
+	protected void SnapPositionToNearestPixel() {
+		Vector3 newPosition = transform.position;
+		newPosition.x = transform.position.x - (transform.position.x % PIXEL_SIZE.x);
+		newPosition.y = transform.position.y - (transform.position.y % PIXEL_SIZE.y);
+		transform.position = newPosition;
 	}
 }

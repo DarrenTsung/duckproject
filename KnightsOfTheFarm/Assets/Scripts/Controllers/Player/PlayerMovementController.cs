@@ -146,7 +146,8 @@ public class PlayerMovementController : MonoBehaviour {
 	}
 
 	public void FixedUpdate() {
-		if (pStatus.CurrentlyChargingSlash() || pStatus.CurrentlySlashing()) {
+		// we don't let the player move when he is charging up for a slash or charge slashing
+		if (pStatus.CurrentlyChargingSlash() || pStatus.CurrentlyChargeSlashing()) {
 			currentAxis = new Vector2(0.0f, currentAxis.y);
 		}
 		

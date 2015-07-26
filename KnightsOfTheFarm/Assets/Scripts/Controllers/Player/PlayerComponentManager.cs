@@ -8,7 +8,11 @@ public class PlayerComponentManager : MonoBehaviour {
 	[HideInInspector]
 	public Rigidbody2D pRigidbody;
 	[HideInInspector]
-	public Transform pGroundCheck, pLeftCheck, pRightCheck, pLeftBottomCheck, pRightBottomCheck;
+	public Transform pGroundCheck;
+	[HideInInspector]
+	public Transform pLeftCheck, pLeftTopCheck, pLeftBottomCheck;
+	[HideInInspector]
+	public Transform pRightCheck, pRightTopCheck, pRightBottomCheck;  
 	[HideInInspector]
 	public GameObject pSpriteObjects;
 	[HideInInspector]
@@ -20,7 +24,7 @@ public class PlayerComponentManager : MonoBehaviour {
 	[HideInInspector]
 	public ParticleSystem pJumpEmitter;
 	[HideInInspector]
-	public ParticleSystemController pWallSlideParticleSystem, pRunParticleSystem;
+	public ParticleSystemController[] pParticleSystemControllers;
 
 	protected void Awake() {
 		pRigidbody = GetComponent<Rigidbody2D>();
@@ -31,12 +35,13 @@ public class PlayerComponentManager : MonoBehaviour {
 		pColliders = transform.Find ("Colliders").gameObject;
 		pGroundCheck = transform.Find ("Checks/GroundCheck");
 		pLeftCheck = transform.Find ("Checks/LeftCheck");
-		pRightCheck = transform.Find ("Checks/RightCheck");
-		pRightBottomCheck = transform.Find ("Checks/RightBottomCheck");
+		pLeftTopCheck = transform.Find ("Checks/LeftTopCheck");
 		pLeftBottomCheck = transform.Find ("Checks/LeftBottomCheck");
-		pJumpEmitter = transform.Find ("Sprite/ParticleEmitters/DustJumpEmitter").GetComponent<ParticleSystem>();
-		pWallSlideParticleSystem = transform.Find ("Sprite/ParticleEmitters/WallSlideEmitter").GetComponent<ParticleSystemController>();
-		pRunParticleSystem = transform.Find ("Sprite/ParticleEmitters/DustRunEmitter").GetComponent<ParticleSystemController>();
+		pRightCheck = transform.Find ("Checks/RightCheck");
+		pRightTopCheck = transform.Find ("Checks/RightTopCheck");
+		pRightBottomCheck = transform.Find ("Checks/RightBottomCheck");
+		pJumpEmitter = transform.Find ("Sprite/ParticleEmitters/JumpEmitter").GetComponent<ParticleSystem>();
+		pParticleSystemControllers = GetComponentsInChildren<ParticleSystemController>();
 	}
 
 	protected void Start() {
